@@ -159,7 +159,6 @@ namespace ClienteGrafico
             this.lblAviso.Name = "lblAviso";
             this.lblAviso.Size = new System.Drawing.Size(0, 17);
             this.lblAviso.TabIndex = 12;
-            this.lblAviso.Visible = false;
             // 
             // Form1
             // 
@@ -184,6 +183,7 @@ namespace ClienteGrafico
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.Text = "Vivasgram";
+            this.Load += new System.EventHandler(this.Form1_Load_1);
             this.ResumeLayout(false);
             this.PerformLayout();
 

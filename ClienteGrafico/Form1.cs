@@ -22,11 +22,14 @@ namespace ClienteGrafico
         private StreamReader streamreader;
 
 
+
+
         const string IP_SERVER = "127.0.0.1";
         public Object l = new object();
         public string nombreUsuario, contrasenha;
         public List<string> nombres = new List<string>();
         public bool usuarioRegistrado = false;
+        VivasGRChat.BasesDatos bd = new BasesDatos();
 
         IPEndPoint ie = new IPEndPoint(IPAddress.Parse(IP_SERVER), 15001);
         Socket server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -37,9 +40,6 @@ namespace ClienteGrafico
             this.MaximizeBox = false;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.BackgroundImageLayout = ImageLayout.Stretch;
-
-
-
         }
 
         private void btnConectar_Click(object sender, EventArgs e)
@@ -48,28 +48,12 @@ namespace ClienteGrafico
             {
                 lblAviso.Text = "";
 
-                if (txtNombre.Text.Contains(" ") || txtNombre.Text == "" || txtPass.Text.Contains(" ") || txtPass.Text == "")
+                if (txtNombre.Text.Contains(" ") || txtNombre.Text == "" || txtPass.Text.Contains(" ") || txtPass.Text == "" || txtPort.Text == "")
                 {
-                    lblAviso.Text = "INTRODUZCA UN USUARIO CORRECTO \nSIN ESPACIOS";
+                    lblAviso.Text = "INTRODUZCA DATOS CORRECTOS";
                 }
                 else
                 {
-                    this.lblNombre.Visible = false;
-                    this.lblAviso.Visible = false;
-                    this.txtNombre.Visible = false;
-                    this.txtPass.Visible = false;
-                    this.btnRegistrar.Visible = false;
-                    this.lblPass.Visible = false;
-                    this.btnCancelar.Visible = false;
-                    this.btnConectar.Visible = false;
-
-                    this.listMensajes.Visible = true;
-                    this.btnEnviar.Visible = true;
-                    this.txtMensaje.Visible = true;
-
-                    this.Text = "VivasGram";
-
-                    this.AcceptButton = this.btnEnviar;
 
                     nombreUsuario = this.txtNombre.Text;
                     contrasenha = this.txtPass.Text;
@@ -88,6 +72,31 @@ namespace ClienteGrafico
                     Thread hiloListen = new Thread(EsucharConexion);
                     hiloListen.Start();
 
+                    if (streamreader.ReadLine().Equals("ok"))
+                    {
+                        this.lblNombre.Visible = false;
+                        this.lblAviso.Visible = false;
+                        this.txtNombre.Visible = false;
+                        this.txtPass.Visible = false;
+                        this.btnRegistrar.Visible = false;
+                        this.lblPass.Visible = false;
+                        this.btnCancelar.Visible = false;
+                        this.btnConectar.Visible = false;
+
+                        this.listMensajes.Visible = true;
+                        this.btnEnviar.Visible = true;
+                        this.txtMensaje.Visible = true;
+
+                        this.Text = "VivasGram";
+
+                        this.AcceptButton = this.btnEnviar;
+                    }
+                    else
+                    {
+                        lblAviso.Text = "Usuario no registrado";
+                    }
+
+
                 }
 
             }
@@ -97,49 +106,6 @@ namespace ClienteGrafico
             }
 
         }
-
-        //public bool ComprobarPuerto(string puertoCadena)
-        //{
-        //    bool correcto = true;
-        //    int puerto = Convert.ToInt32(puertoCadena);
-
-        //    IPGlobalProperties ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties(); TcpConnectionInformation[] tcpConnInfoArray = ipGlobalProperties.GetActiveTcpConnections();
-
-        //    TcpConnectionInformation[] tcpinfo = ipGlobalProperties.GetActiveTcpConnections();
-
-        //    foreach (TcpConnectionInformation tcpi in tcpinfo)
-        //    {
-        //        if (tcpi.LocalEndPoint.Port == puerto)
-        //        {
-        //            correcto = false;
-        //        }
-        //    }
-
-        //    return correcto;
-        //}
-
-
-        //public bool IpValida(string ip)
-        //{
-        //    bool correcto = true;
-
-        //    string[] partes = ip.Split('.');
-        //    char[] caracteres;
-
-        //    for (int i = 0; i < partes.Length; i++)
-        //    {
-        //        caracteres = partes[i].ToCharArray();
-
-        //        for (int j = 0; j < caracteres.Length; j++)
-        //        {
-        //            if (!char.IsNumber(caracteres[j]))
-        //            {
-        //                correcto = false;
-        //            }
-        //        }
-        //    }
-        //    return correcto;
-        //}
 
 
         private void Form1_Load(object sender, EventArgs e)
@@ -231,6 +197,11 @@ namespace ClienteGrafico
 
         }
 
+        private void Form1_Load_1(object sender, EventArgs e)
+        {
+
+        }
+
         private void btnRegistro_Click(object sender, EventArgs e)
         {
             try
@@ -238,17 +209,17 @@ namespace ClienteGrafico
                 // EN caso de que el usuario no este registrado se le registra pulsando aqui 
                 lblAviso.Text = "";
 
-                //if (bd.UsuarioYaRegistrado(txtUsuario.Text))
-                //{
-                //    lblWarning.Text = "Este usuario ya está registrado, \n" +
-                //        "pruebe otro nombre";
-                //}
-                //else
-                //{
-                //    bd.AnhadirUsuario(txtUsuario.Text, txtPass.Text);
-                //    lblWarning.Text = "El usuario ha sido registrado con éxito! \n" +
-                //                        "Ya puedes iniciar sesion";
-                //}
+                if (bd.UsuarioYaRegistrado(txtNombre.Text))
+                {
+                    lblAviso.Text = "Este usuario ya está registrado, \n" +
+                        "pruebe otro nombre";
+                }
+                else
+                {
+                    bd.AnhadirUsuario(txtNombre.Text, txtPass.Text);
+                    lblAviso.Text = "El usuario ha sido registrado con éxito! \n" +
+                                        "Ya puedes iniciar sesion";
+                }
 
                 this.Text = "VivasGram";
 
