@@ -1,3 +1,9 @@
+C:\Users\Juanjo\source\repos\VivasGRChat\ClienteGrafico\obj\Debug\ClienteGrafico.csproj.AssemblyReference.cache
+C:\Users\Juanjo\source\repos\VivasGRChat\ClienteGrafico\obj\Debug\ClienteGrafico.exe.config
+C:\Users\Juanjo\source\repos\VivasGRChat\ClienteGrafico\obj\Debug\ClienteGrafico.Form1.resources
+C:\Users\Juanjo\source\repos\VivasGRChat\ClienteGrafico\obj\Debug\ClienteGrafico.Properties.Resources.resources
+C:\Users\Juanjo\source\repos\VivasGRChat\ClienteGrafico\obj\Debug\ClienteGrafico.csproj.GenerateResource.cache
+C:\Users\Juanjo\source\repos\VivasGRChat\ClienteGrafico\obj\Debug\ClienteGrafico.csproj.CoreCompileInputs.cache
 C:\Users\Juanjo\source\repos\VivasGRChat\ClienteGrafico\bin\Debug\ClienteGrafico.exe.config
 C:\Users\Juanjo\source\repos\VivasGRChat\ClienteGrafico\bin\Debug\ClienteGrafico.exe
 C:\Users\Juanjo\source\repos\VivasGRChat\ClienteGrafico\bin\Debug\ClienteGrafico.pdb
@@ -16,12 +22,6 @@ C:\Users\Juanjo\source\repos\VivasGRChat\ClienteGrafico\bin\Debug\System.Numeric
 C:\Users\Juanjo\source\repos\VivasGRChat\ClienteGrafico\bin\Debug\VivasGRChat.pdb
 C:\Users\Juanjo\source\repos\VivasGRChat\ClienteGrafico\bin\Debug\VivasGRChat.exe.config
 C:\Users\Juanjo\source\repos\VivasGRChat\ClienteGrafico\bin\Debug\MySql.Data.xml
-C:\Users\Juanjo\source\repos\VivasGRChat\ClienteGrafico\obj\Debug\ClienteGrafico.csproj.AssemblyReference.cache
-C:\Users\Juanjo\source\repos\VivasGRChat\ClienteGrafico\obj\Debug\ClienteGrafico.exe.config
-C:\Users\Juanjo\source\repos\VivasGRChat\ClienteGrafico\obj\Debug\ClienteGrafico.Form1.resources
-C:\Users\Juanjo\source\repos\VivasGRChat\ClienteGrafico\obj\Debug\ClienteGrafico.Properties.Resources.resources
-C:\Users\Juanjo\source\repos\VivasGRChat\ClienteGrafico\obj\Debug\ClienteGrafico.csproj.GenerateResource.cache
-C:\Users\Juanjo\source\repos\VivasGRChat\ClienteGrafico\obj\Debug\ClienteGrafico.csproj.CoreCompileInputs.cache
 C:\Users\Juanjo\source\repos\VivasGRChat\ClienteGrafico\obj\Debug\ClienteGrafico.csproj.CopyComplete
 C:\Users\Juanjo\source\repos\VivasGRChat\ClienteGrafico\obj\Debug\ClienteGrafico.exe
 C:\Users\Juanjo\source\repos\VivasGRChat\ClienteGrafico\obj\Debug\ClienteGrafico.pdb

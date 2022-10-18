@@ -39,10 +39,18 @@ namespace VivasGRChat
             while (!puertoCorrecto)
                 try
                 {
-                    IPEndPoint endpoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), puerto);
                     puertoCorrecto = true;
 
                     Socket socketConexion = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+                    //using (NetworkStream ns = new NetworkStream(socketConexion))
+                    //using (StreamReader sr = new StreamReader(ns))
+                    //using (StreamWriter sw = new StreamWriter(ns))
+                    //{
+                    //    puerto = Int32.Parse(sr.ReadLine());
+                    //}
+
+                    IPEndPoint endpoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), puerto);
                     socketConexion.Bind(endpoint);
                     socketConexion.Listen(2);
                     Console.WriteLine("Servidor en marcha");
@@ -53,12 +61,12 @@ namespace VivasGRChat
                         Socket socketCliente = socketConexion.Accept();
                         Thread hilos = new Thread(HiloCliente);
 
-                        using (NetworkStream ns = new NetworkStream(socketCliente))
-                        using (StreamReader sr = new StreamReader(ns))
-                        using (StreamWriter sw = new StreamWriter(ns))
-                        {
+                        //using (NetworkStream ns = new NetworkStream(socketCliente))
+                        //using (StreamReader sr = new StreamReader(ns))
+                        //using (StreamWriter sw = new StreamWriter(ns))
+                        //{
                             hilos.Start(socketCliente);
-                        }
+                        //}
 
                     }
 
@@ -112,7 +120,9 @@ namespace VivasGRChat
 
                 if (bd.ComprobarUsuarioRegistrado(nombre, contrasenha))
                 {
+
                     sw.WriteLine("ok");
+                    sw.Flush();
 
                     user.NickUser = sr.ReadLine();
                     user.Contrasenha = sr.ReadLine();
@@ -155,10 +165,9 @@ namespace VivasGRChat
                     sw.WriteLine("deny");
                 }
 
-                
-
             }
         }
+
 
         public void EnvioMensaje(string m, IPEndPoint ie, string nombre)
         {
@@ -172,6 +181,22 @@ namespace VivasGRChat
 
                     {
                         info = (IPEndPoint)clientes[i - 1].RemoteEndPoint;
+
+                        //using (NetworkStream ns = new NetworkStream(clientes[i - 1]))
+                        //using (StreamReader sr = new StreamReader(ns))
+                        //using (StreamWriter sw = new StreamWriter(ns))
+                        //{
+                        //    try
+                        //    {
+                        //        sw.WriteLine(nombre + " : " + m);
+                        //        sw.Flush();
+
+                        //    }
+                        //    catch (Exception e)
+                        //    {
+                        //        Console.WriteLine("" + e.Message);
+                        //    }
+                        //}
                         usermensaje.stream = new NetworkStream(clientes[i - 1]);
                         usermensaje.streamwriter = new StreamWriter(usermensaje.stream);
                         try

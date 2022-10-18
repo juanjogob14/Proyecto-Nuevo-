@@ -17,12 +17,9 @@ namespace ClienteGrafico
 {
     public partial class Form1 : Form
     {
-        private NetworkStream stream;
-        private StreamWriter streamwriter;
-        private StreamReader streamreader;
-
-
-
+        //private NetworkStream stream;
+        //private StreamWriter streamwriter;
+        //private StreamReader streamreader;
 
         const string IP_SERVER = "127.0.0.1";
         public Object l = new object();
@@ -30,6 +27,7 @@ namespace ClienteGrafico
         public List<string> nombres = new List<string>();
         public bool usuarioRegistrado = false;
         VivasGRChat.BasesDatos bd = new BasesDatos();
+        public int puerto;
 
         IPEndPoint ie = new IPEndPoint(IPAddress.Parse(IP_SERVER), 15001);
         Socket server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -40,6 +38,7 @@ namespace ClienteGrafico
             this.MaximizeBox = false;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.BackgroundImageLayout = ImageLayout.Stretch;
+            //puerto = Int32.Parse(this.txtPort.Text);
         }
 
         private void btnConectar_Click(object sender, EventArgs e)
@@ -60,42 +59,46 @@ namespace ClienteGrafico
 
                     server.Connect(ie);
 
-                    stream = new NetworkStream(server);
-                    streamwriter = new StreamWriter(stream);
-                    streamreader = new StreamReader(stream);
+                    using (NetworkStream ns = new NetworkStream(server))
+                    using (StreamReader sr = new StreamReader(ns))
+                    using (StreamWriter sw = new StreamWriter(ns))
+                    {
+                        sw.WriteLine(nombreUsuario);
+                        sw.WriteLine(contrasenha);
 
-                    streamwriter.WriteLine(nombreUsuario);
-                    streamwriter.WriteLine(contrasenha);
-
-                    streamwriter.Flush();
+                    }
 
                     Thread hiloListen = new Thread(EsucharConexion);
                     hiloListen.Start();
 
-                    if (streamreader.ReadLine().Equals("ok"))
+                    using (NetworkStream ns = new NetworkStream(server))
+                    using (StreamReader sr = new StreamReader(ns))
                     {
-                        this.lblNombre.Visible = false;
-                        this.lblAviso.Visible = false;
-                        this.txtNombre.Visible = false;
-                        this.txtPass.Visible = false;
-                        this.btnRegistrar.Visible = false;
-                        this.lblPass.Visible = false;
-                        this.btnCancelar.Visible = false;
-                        this.btnConectar.Visible = false;
 
-                        this.listMensajes.Visible = true;
-                        this.btnEnviar.Visible = true;
-                        this.txtMensaje.Visible = true;
+                        if (sr.ReadLine().Equals("ok"))
+                        {
+                            this.lblNombre.Visible = false;
+                            this.lblAviso.Visible = false;
+                            this.txtNombre.Visible = false;
+                            this.txtPass.Visible = false;
+                            this.btnRegistrar.Visible = false;
+                            this.lblPass.Visible = false;
+                            this.btnCancelar.Visible = false;
+                            this.btnConectar.Visible = false;
 
-                        this.Text = "VivasGram";
+                            this.listMensajes.Visible = true;
+                            this.btnEnviar.Visible = true;
+                            this.txtMensaje.Visible = true;
 
-                        this.AcceptButton = this.btnEnviar;
+                            this.Text = "VivasGram";
+
+                            this.AcceptButton = this.btnEnviar;
+                        }
+                        else
+                        {
+                            lblAviso.Text = "Usuario no registrado, por favor registrese\n en el botón de registro";
+                        }
                     }
-                    else
-                    {
-                        lblAviso.Text = "Usuario no registrado";
-                    }
-
 
                 }
 
@@ -130,7 +133,12 @@ namespace ClienteGrafico
                     {
                         try
                         {
-                            this.Invoke(new DAddItem(AddItem), streamreader.ReadLine());
+                            using (NetworkStream ns = new NetworkStream(server))
+                            using (StreamReader sr = new StreamReader(ns))
+                            using (StreamWriter sw = new StreamWriter(ns))
+                            {
+                                this.Invoke(new DAddItem(AddItem), sr.ReadLine());
+                            }
                         }
                         catch (Exception e)
                         {
@@ -152,8 +160,13 @@ namespace ClienteGrafico
             }
             else
             {
-                streamwriter.WriteLine(txtMensaje.Text);
-                streamwriter.Flush();
+                using (NetworkStream ns = new NetworkStream(server))
+                using (StreamReader sr = new StreamReader(ns))
+                using (StreamWriter sw = new StreamWriter(ns))
+                {
+                    sw.WriteLine(txtMensaje.Text);
+                }
+                
                 txtMensaje.Clear();
             }
 
@@ -206,21 +219,32 @@ namespace ClienteGrafico
         {
             try
             {
+
+                using (NetworkStream ns = new NetworkStream(server))
+                using (StreamReader sr = new StreamReader(ns))
+                using (StreamWriter sw = new StreamWriter(ns))
+                {
+                    sw.WriteLine("registro");
+                }
                 // EN caso de que el usuario no este registrado se le registra pulsando aqui 
-                lblAviso.Text = "";
+                //lblAviso.Text = "";
 
-                if (bd.UsuarioYaRegistrado(txtNombre.Text))
-                {
-                    lblAviso.Text = "Este usuario ya está registrado, \n" +
-                        "pruebe otro nombre";
-                }
-                else
-                {
-                    bd.AnhadirUsuario(txtNombre.Text, txtPass.Text);
-                    lblAviso.Text = "El usuario ha sido registrado con éxito! \n" +
-                                        "Ya puedes iniciar sesion";
-                }
+                //if (bd.UsuarioYaRegistrado(txtNombre.Text))
+                //{
+                //    lblAviso.Text = "Este usuario ya está registrado, \n" +
+                //        "pruebe otro nombre";
+                //}
+                //else
+                //{
+                //    bd.AnhadirUsuario(txtNombre.Text, txtPass.Text);
+                //    lblAviso.Text = "El usuario ha sido registrado con éxito! \n" +
+                //                        "Ya puedes iniciar sesion";
+                //}
 
+
+                //escribir un comando que se lea en el servidor con el cual se vea que se aprieta este botón
+                //y se hagan las comprobaciones
+                // necesarias para hacer el registro
                 this.Text = "VivasGram";
 
 
