@@ -18,4 +18,3 @@ C:\Users\Juanjo\source\repos\VivasGRChat\VivasGRChat\obj\Debug\VivasGRChat.cspro
 C:\Users\Juanjo\source\repos\VivasGRChat\VivasGRChat\obj\Debug\VivasGRChat.csproj.CopyComplete
 C:\Users\Juanjo\source\repos\VivasGRChat\VivasGRChat\obj\Debug\VivasGRChat.exe
 C:\Users\Juanjo\source\repos\VivasGRChat\VivasGRChat\obj\Debug\VivasGRChat.pdb
-C:\Users\Juanjo\source\repos\VivasGRChat\VivasGRChat\obj\Debug\VivasGRChat.csproj.AssemblyReference.cache

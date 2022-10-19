@@ -20,7 +20,7 @@ namespace VivasGRChat
 
         public static bool usuarioRegistrado = false;
         bool correcto = true;
-        string nombre, contrasenha;
+        string nombre, contrasenha, estado;
 
         public Chat()
         {
@@ -43,13 +43,6 @@ namespace VivasGRChat
 
                     Socket socketConexion = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-                    //using (NetworkStream ns = new NetworkStream(socketConexion))
-                    //using (StreamReader sr = new StreamReader(ns))
-                    //using (StreamWriter sw = new StreamWriter(ns))
-                    //{
-                    //    puerto = Int32.Parse(sr.ReadLine());
-                    //}
-
                     IPEndPoint endpoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), puerto);
                     socketConexion.Bind(endpoint);
                     socketConexion.Listen(2);
@@ -61,12 +54,12 @@ namespace VivasGRChat
                         Socket socketCliente = socketConexion.Accept();
                         Thread hilos = new Thread(HiloCliente);
 
-                        //using (NetworkStream ns = new NetworkStream(socketCliente))
-                        //using (StreamReader sr = new StreamReader(ns))
-                        //using (StreamWriter sw = new StreamWriter(ns))
-                        //{
+                        using (NetworkStream ns = new NetworkStream(socketCliente))
+                        using (StreamReader sr = new StreamReader(ns))
+                        using (StreamWriter sw = new StreamWriter(ns))
+                        {
                             hilos.Start(socketCliente);
-                        //}
+                        }
 
                     }
 
@@ -88,18 +81,18 @@ namespace VivasGRChat
                 }
         }
 
-        public bool ComprobarPuerto(string puertoCadena)
-        {
-            bool correcto = false;
-            int puerto;
+        //public bool ComprobarPuerto(string puertoCadena)
+        //{
+        //    bool correcto = false;
+        //    int puerto;
 
-            if (int.TryParse(puertoCadena, out puerto))
-            {
-                correcto = true;
-            }
+        //    if (int.TryParse(puertoCadena, out puerto))
+        //    {
+        //        correcto = true;
+        //    }
 
-            return correcto;
-        }
+        //    return correcto;
+        //}
 
         public void HiloCliente(object Socket)
         {
@@ -114,56 +107,63 @@ namespace VivasGRChat
             using (StreamReader sr = new StreamReader(ns))
             using (StreamWriter sw = new StreamWriter(ns))
             {
-
+                estado = sr.ReadLine();
                 nombre = sr.ReadLine();
                 contrasenha = sr.ReadLine();
 
-                if (bd.ComprobarUsuarioRegistrado(nombre, contrasenha))
-                {
+                user.NickUser = nombre;
+                user.Contrasenha = contrasenha;
 
+                if (estado == "conect")
+                {
+                    if (bd.ComprobarUsuarioRegistrado(nombre, contrasenha))
+                    {
+
+                        sw.WriteLine("ok");
+                        sw.Flush();
+
+                        sw.WriteLine("Bienvenido a VivasGram {0}! Usuario(s) conectado(s) : {1}", nombre, clientes.Count);
+                        sw.Flush();
+
+                        while (!cerrarChat)
+                        {
+                            try
+                            {
+                                mensaje = sr.ReadLine();
+                                if (mensaje != null)
+                                {
+                                    //Console.WriteLine("Entra ");
+                                    EnvioMensaje(mensaje, info, user.NickUser);
+                                }
+
+                            }
+                            catch (IOException)
+                            {
+                                Console.WriteLine("Se ha desconectado " + info.Port);
+                                socketCliente.Close();
+                                lock (llave)
+                                {
+                                    clientes.Remove(socketCliente);
+                                }
+                                cerrarChat = true;
+
+                            }
+
+
+                        }
+                    }
+                    else
+                    {
+                       sw.WriteLine("deny");
+                    }
+                }
+                else if(estado == "registro")
+                {
                     sw.WriteLine("ok");
-                    sw.Flush();
-
-                    user.NickUser = sr.ReadLine();
-                    user.Contrasenha = sr.ReadLine();
-                    sw.WriteLine("Bienvenido a VivasGram {0}! \nConexion al puerto:{1}", user.NickUser, info.Port);
-                    lock (llave)
-                    {
-                        sw.WriteLine("Personas conectadas en el momento de tu conexión:{0} ", clientes.Count);
-                    }
-                    sw.Flush();
-
-                    while (!cerrarChat)
-                    {
-                        try
-                        {
-                            mensaje = sr.ReadLine();
-                            if (mensaje != null)
-                            {
-                                Console.WriteLine("Entra ");
-                                EnvioMensaje(mensaje, info, user.NickUser);
-                            }
-
-                        }
-                        catch (IOException)
-                        {
-                            Console.WriteLine("Se ha desconectado " + info.Port);
-                            socketCliente.Close();
-                            lock (llave)
-                            {
-                                clientes.Remove(socketCliente);
-                            }
-                            cerrarChat = true;
-
-                        }
-
-
-                    }
+                    bd.AnhadirUsuario(user.NickUser, user.Contrasenha);
                 }
-                else
-                {
-                    sw.WriteLine("deny");
-                }
+
+                
 
             }
         }
@@ -172,7 +172,6 @@ namespace VivasGRChat
         public void EnvioMensaje(string m, IPEndPoint ie, string nombre)
         {
             IPEndPoint info;
-            Usuario usermensaje = new Usuario();
 
             lock (llave)
             {
@@ -182,33 +181,23 @@ namespace VivasGRChat
                     {
                         info = (IPEndPoint)clientes[i - 1].RemoteEndPoint;
 
-                        //using (NetworkStream ns = new NetworkStream(clientes[i - 1]))
-                        //using (StreamReader sr = new StreamReader(ns))
-                        //using (StreamWriter sw = new StreamWriter(ns))
-                        //{
-                        //    try
-                        //    {
-                        //        sw.WriteLine(nombre + " : " + m);
-                        //        sw.Flush();
-
-                        //    }
-                        //    catch (Exception e)
-                        //    {
-                        //        Console.WriteLine("" + e.Message);
-                        //    }
-                        //}
-                        usermensaje.stream = new NetworkStream(clientes[i - 1]);
-                        usermensaje.streamwriter = new StreamWriter(usermensaje.stream);
-                        try
+                        using (NetworkStream ns = new NetworkStream(clientes[i - 1]))
+                        using (StreamReader sr = new StreamReader(ns))
+                        using (StreamWriter sw = new StreamWriter(ns))
                         {
-                            usermensaje.streamwriter.WriteLine(nombre + " : " + m);
-                            usermensaje.streamwriter.Flush();
+                            try
+                            {
+                                sw.WriteLine(nombre + " : " + m);
+                                sw.Flush();
 
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine("" + e.Message);
+                            }
                         }
-                        catch (Exception e)
-                        {
-                            Console.WriteLine("" + e.Message);
-                        }
+
+                        
                     }
 
                 }

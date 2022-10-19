@@ -20,6 +20,11 @@ namespace VivasGRChat
             set; get;
         }
 
+        public string Estado
+        {
+            set;get;
+        }
+
         public NetworkStream stream;
 
         public StreamWriter streamwriter;

@@ -98,16 +98,17 @@ namespace ClienteGrafico
             // 
             this.btnRegistrar.Location = new System.Drawing.Point(44, 312);
             this.btnRegistrar.Name = "btnRegistrar";
-            this.btnRegistrar.Size = new System.Drawing.Size(75, 23);
+            this.btnRegistrar.Size = new System.Drawing.Size(95, 23);
             this.btnRegistrar.TabIndex = 6;
             this.btnRegistrar.Text = "Registrar";
             this.btnRegistrar.UseVisualStyleBackColor = true;
+            this.btnRegistrar.Click += new System.EventHandler(this.btnRegistro_Click);
             // 
             // btnConectar
             // 
             this.btnConectar.Location = new System.Drawing.Point(199, 312);
             this.btnConectar.Name = "btnConectar";
-            this.btnConectar.Size = new System.Drawing.Size(75, 23);
+            this.btnConectar.Size = new System.Drawing.Size(96, 23);
             this.btnConectar.TabIndex = 7;
             this.btnConectar.Text = "Conectar";
             this.btnConectar.UseVisualStyleBackColor = true;
@@ -116,12 +117,13 @@ namespace ClienteGrafico
             // btnCancelar
             // 
             this.btnCancelar.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancelar.Location = new System.Drawing.Point(365, 312);
+            this.btnCancelar.Location = new System.Drawing.Point(348, 312);
             this.btnCancelar.Name = "btnCancelar";
-            this.btnCancelar.Size = new System.Drawing.Size(75, 23);
+            this.btnCancelar.Size = new System.Drawing.Size(92, 23);
             this.btnCancelar.TabIndex = 8;
             this.btnCancelar.Text = "Cancelar";
             this.btnCancelar.UseVisualStyleBackColor = true;
+            this.btnCancelar.Click += new System.EventHandler(this.btnCancelar_Click);
             // 
             // listMensajes
             // 
@@ -135,7 +137,7 @@ namespace ClienteGrafico
             // 
             // txtMensaje
             // 
-            this.txtMensaje.Location = new System.Drawing.Point(27, 407);
+            this.txtMensaje.Location = new System.Drawing.Point(27, 410);
             this.txtMensaje.Name = "txtMensaje";
             this.txtMensaje.Size = new System.Drawing.Size(335, 22);
             this.txtMensaje.TabIndex = 10;
@@ -183,7 +185,6 @@ namespace ClienteGrafico
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.Text = "Vivasgram";
-            this.Load += new System.EventHandler(this.Form1_Load_1);
             this.ResumeLayout(false);
             this.PerformLayout();
 
