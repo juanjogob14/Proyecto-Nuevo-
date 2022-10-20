@@ -179,9 +179,9 @@ namespace ClienteGrafico
         {
             try
             {
+                estado = "registro";
                 nombreUsuario = this.txtNombre.Text;
                 contrasenha = this.txtPass.Text;
-                estado = "registro";
 
                 server.Connect(ie);
 
@@ -189,7 +189,7 @@ namespace ClienteGrafico
                 using (StreamReader sr = new StreamReader(ns))
                 using (StreamWriter sw = new StreamWriter(ns))
                 {
-                    sw.WriteLine("estado");
+                    sw.WriteLine(estado);
                     sw.WriteLine(nombreUsuario);
                     sw.WriteLine(contrasenha);
                     sw.Flush();
@@ -218,11 +218,9 @@ namespace ClienteGrafico
                     }
                     else
                     {
-                        lblAviso.Text = "error";
+                        lblAviso.Text = "Usuario ya registrado";
                     }
                 }
-
-                
 
                 this.Text = "VivasGram";
 

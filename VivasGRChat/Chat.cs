@@ -132,7 +132,6 @@ namespace VivasGRChat
                                 mensaje = sr.ReadLine();
                                 if (mensaje != null)
                                 {
-                                    //Console.WriteLine("Entra ");
                                     EnvioMensaje(mensaje, info, user.NickUser);
                                 }
 
@@ -159,8 +158,47 @@ namespace VivasGRChat
                 }
                 else if(estado == "registro")
                 {
-                    sw.WriteLine("ok");
-                    bd.AnhadirUsuario(user.NickUser, user.Contrasenha);
+                    if (!bd.UsuarioYaRegistrado(user.NickUser))
+                    {
+                        sw.WriteLine("ok");
+                        sw.Flush();
+                        bd.AnhadirUsuario(user.NickUser, user.Contrasenha);
+
+                        sw.WriteLine("Registrado en Vivasgram {0}! Usuario(s) conectado(s) : {1}", nombre, clientes.Count);
+                        sw.Flush();
+
+                        while (!cerrarChat)
+                        {
+                            try
+                            {
+                                mensaje = sr.ReadLine();
+                                if (mensaje != null)
+                                {
+                                    //Console.WriteLine("Entra ");
+                                    EnvioMensaje(mensaje, info, user.NickUser);
+                                }
+
+                            }
+                            catch (IOException)
+                            {
+                                Console.WriteLine("Se ha desconectado " + info.Port);
+                                socketCliente.Close();
+                                lock (llave)
+                                {
+                                    clientes.Remove(socketCliente);
+                                }
+                                cerrarChat = true;
+
+                            }
+
+
+                        }
+                    }
+                    else
+                    {
+                        sw.WriteLine("deny");
+                    }
+                   
                 }
 
                 
